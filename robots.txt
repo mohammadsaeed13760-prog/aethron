@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mohammadsaeed13760-prog.github.io/aethron/sitemap.xml
