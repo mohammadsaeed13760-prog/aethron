@@ -115,6 +115,8 @@ main,.footer{position:relative;z-index:2}
 .prod-text{color:var(--fg2);margin:0 0 18px;max-width:46ch}
 .prod-meta{font-size:13.5px;color:var(--fg3);margin:0 0 30px;letter-spacing:.02em}
 .prod .btn{margin-top:auto}
+.prod-actions{margin-top:auto;display:flex;flex-wrap:wrap;gap:12px}
+.prod-actions .btn{margin-top:0}
 /* divisions */
 .div-grid{display:grid;grid-template-columns:repeat(3,1fr);margin-top:56px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
 .div-card{padding:34px 30px 38px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(0,0,0,.35);transition:background .4s}
