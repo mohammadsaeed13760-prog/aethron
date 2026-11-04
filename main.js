@@ -122,3 +122,128 @@ function start3D() {
 }
 const kick = () => ('requestIdleCallback' in window) ? requestIdleCallback(start3D, { timeout: 1200 }) : setTimeout(start3D, 200);
 if (document.readyState === 'complete') kick(); else addEventListener('load', kick, { once: true });
+
+
+/* ===================== FX layer (Nov 4): text reveals, 3D tilt, glow, aurora, dividers ===================== */
+(() => {
+  if (reduce) return;
+  doc.classList.add('fx-on');
+  const $$ = (q, r = document) => [...r.querySelectorAll(q)];
+  const coarse = isTouch;
+
+  /* headings: split words for the blur + 3D flip reveal */
+  $$('.h2.reveal').forEach(h => {
+    h.setAttribute('aria-label', h.textContent.trim().replace(/\s+/g, ' '));
+    let i = 0;
+    const walk = (node) => {
+      [...node.childNodes].forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+            const s = document.createElement('span'); s.className = 'w'; s.style.setProperty('--i', i++); s.setAttribute('aria-hidden', 'true'); s.textContent = part; frag.appendChild(s);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1) walk(n);
+      });
+    };
+    walk(h);
+  });
+
+  /* tagline: decrypt effect */
+  const tag = document.querySelector('.tagline span:nth-child(2)');
+  if (tag) {
+    const final = tag.textContent, GL = 'AETHRON01<>/#*+=';
+    const r = tag.getBoundingClientRect();
+    tag.style.cssText = `display:inline-block;width:${Math.ceil(r.width)}px;height:${Math.ceil(r.height)}px;overflow:hidden;vertical-align:middle`;
+    tag.parentElement.setAttribute('aria-label', final);
+    const due = [...final].map((ch, i) => 520 + i * 22 + Math.random() * 380);
+    const t0 = performance.now(); let last = 0;
+    const step = (now) => {
+      const el = now - t0;
+      if (now - last > 45) {
+        last = now; let out = '', done = true;
+        for (let i = 0; i < final.length; i++) {
+          const ch = final[i];
+          if (ch === ' ' || el >= due[i]) out += ch.replace('&', '&amp;');
+          else { done = false; out += el < 380 ? '<span class="scr" style="opacity:0">·</span>' : `<span class="scr">${GL[(Math.random() * GL.length) | 0]}</span>`; }
+        }
+        tag.innerHTML = out;
+        if (done) { tag.textContent = final; tag.style.cssText = ''; return; }
+      }
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* decorations: aurora fields, light dividers, product border beams */
+  $$('.products, .mission, .leadership, .outro').forEach(s => {
+    const a = document.createElement('div'); a.className = 'aurora'; a.setAttribute('aria-hidden', 'true');
+    a.innerHTML = '<i></i><i></i><i></i>'; s.prepend(a);
+  });
+  $$('main .section').forEach(s => { const d = document.createElement('div'); d.className = 'fx-div'; d.setAttribute('aria-hidden', 'true'); s.prepend(d); });
+  $$('.prod').forEach(el => { const b = document.createElement('span'); b.className = 'beam-edge'; b.setAttribute('aria-hidden', 'true'); el.appendChild(b); });
+
+  /* pause every CSS loop in a section while it is off screen */
+  if ('IntersectionObserver' in window) {
+    const pio = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('fx-paused', !e.isIntersecting)), { rootMargin: '120px 0px' });
+    $$('main > section').forEach(s => pio.observe(s));
+  }
+
+  /* 3D tilt + glow borders */
+  const tilts = $$('.prod, .founder, .team-group, .mv-block, .media-card');
+  const glows = tilts.concat($$('.div-card'));
+  tilts.forEach(el => el.classList.add('tilt'));
+  glows.forEach(el => el.classList.add('glow'));
+  const settle = (el) => setTimeout(() => el.classList.add('settled'), 1500 + (parseFloat(el.style.getPropertyValue('--d')) || 0));
+  const vis = new Set();
+  const sio = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { vis.add(e.target); if (!e.target.dataset.s) { e.target.dataset.s = 1; settle(e.target); } }
+    else { vis.delete(e.target); e.target.classList.remove('lit'); }
+  }), { rootMargin: '40px 0px' });
+  glows.forEach(el => sio.observe(el));
+
+  if (!coarse) {
+    glows.forEach(el => {
+      const isTilt = el.classList.contains('tilt');
+      const max = el.classList.contains('prod') || el.classList.contains('media-card') ? 7 : 3.5;
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        el.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`); el.style.setProperty('--my', `${(y * 100).toFixed(1)}%`);
+        if (isTilt && el.classList.contains('settled')) {
+          el.style.setProperty('--ry', `${((x - 0.5) * 2 * max).toFixed(2)}deg`); el.style.setProperty('--rx', `${(-(y - 0.5) * 2 * max).toFixed(2)}deg`);
+          el.classList.add('hot');
+        }
+        el.classList.add('lit');
+      });
+      el.addEventListener('pointerleave', () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); el.classList.remove('hot', 'lit'); });
+    });
+    /* soft spotlight that follows the cursor */
+    const spot = document.createElement('div'); spot.className = 'spot'; spot.setAttribute('aria-hidden', 'true'); document.body.appendChild(spot);
+    let sx = 0, sy = 0, queued = false;
+    addEventListener('pointermove', e => {
+      sx = e.clientX; sy = e.clientY;
+      if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; spot.style.transform = `translate3d(${sx}px,${sy}px,0)`; spot.classList.add('on'); }); }
+    }, { passive: true });
+    document.addEventListener('pointerleave', () => spot.classList.remove('on'));
+  } else {
+    /* phones: cards lean and catch light as they scroll through the screen */
+    let queued = false;
+    const run = () => {
+      queued = false;
+      const vh = innerHeight;
+      vis.forEach(el => {
+        const r = el.getBoundingClientRect();
+        const p = Math.max(-1, Math.min(1, ((r.top + r.height / 2) - vh / 2) / (vh / 2)));
+        el.style.setProperty('--mx', `${(50 - p * 45).toFixed(1)}%`); el.style.setProperty('--my', '0%');
+        el.classList.toggle('lit', Math.abs(p) < 0.55);
+        if (el.classList.contains('tilt') && el.classList.contains('settled')) {
+          el.classList.add('hot');
+          el.style.setProperty('--rx', `${(p * 7).toFixed(2)}deg`);
+        }
+      });
+    };
+    addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(run); } }, { passive: true });
+  }
+})();
