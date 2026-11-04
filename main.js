@@ -178,7 +178,7 @@ if (document.readyState === 'complete') kick(); else addEventListener('load', ki
   }
 
   /* decorations: aurora fields, light dividers, product border beams */
-  $$('.products, .mission, .leadership, .outro').forEach(s => {
+  $$('.products, .api, .mission, .leadership, .outro').forEach(s => {
     const a = document.createElement('div'); a.className = 'aurora'; a.setAttribute('aria-hidden', 'true');
     a.innerHTML = '<i></i><i></i><i></i>'; s.prepend(a);
   });
@@ -192,7 +192,7 @@ if (document.readyState === 'complete') kick(); else addEventListener('load', ki
   }
 
   /* 3D tilt + glow borders */
-  const tilts = $$('.prod, .founder, .team-group, .mv-block, .media-card');
+  const tilts = $$('.prod, .founder, .team-group, .mv-block, .media-card, .api-code');
   const glows = tilts.concat($$('.div-card'));
   tilts.forEach(el => el.classList.add('tilt'));
   glows.forEach(el => el.classList.add('glow'));
@@ -247,3 +247,12 @@ if (document.readyState === 'complete') kick(); else addEventListener('load', ki
     addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(run); } }, { passive: true });
   }
 })();
+
+/* Developer API: copy the curl sample (works with reduced motion too) */
+document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+  const el = document.getElementById(b.dataset.copy); if (!el) return;
+  const txt = el.textContent;
+  try { await navigator.clipboard.writeText(txt); }
+  catch { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); try { document.execCommand('copy'); } catch {} }
+  const t = b.textContent; b.textContent = 'Copied'; setTimeout(() => { b.textContent = t; }, 1600);
+}));
