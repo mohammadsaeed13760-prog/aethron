@@ -327,3 +327,43 @@ main,.footer{position:relative;z-index:2}
   .js .reveal:not(.h2){transform:none}
   .spot{display:none}
 }
+
+/* ---------- Developer API (Nov 4) ---------- */
+.prod-wide{grid-column:1/-1}
+.prod-wide .prod-top{margin-bottom:36px}
+.prod-wide .prod-text{max-width:62ch}
+.prod:nth-child(3) .beam-edge{animation-delay:-1.5s}
+.api{isolation:isolate}
+.api-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(36px,5vw,80px);align-items:center}
+.api-copy,.api-code{min-width:0}
+.api .lead{max-width:44ch}
+.api-pills{list-style:none;display:flex;flex-wrap:wrap;gap:10px;padding:0;margin:4px 0 28px}
+.api-pills li{font-size:13px;letter-spacing:.06em;color:var(--fg);border:1px solid var(--line2);border-radius:999px;padding:6px 14px;background:rgba(255,255,255,.03)}
+.api-facts{margin:0 0 34px;display:grid;gap:0;border-top:1px solid var(--line)}
+.api-facts div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:16px;padding:13px 0;border-bottom:1px solid var(--line)}
+.api-facts dt{font-family:var(--disp);font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--fg3);padding-top:3px}
+.api-facts dd{margin:0;color:var(--fg2);font-size:15.5px;overflow-wrap:anywhere}
+.api code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:.92em;color:var(--fg)}
+.api-cta{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.btn-xl{height:60px;padding:0 32px;font-size:17px;font-weight:600}
+.api-note{margin:0;font-size:13.5px;color:var(--fg3)}
+.api-code{margin:0;border:1px solid var(--line2);border-radius:20px;background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.01) 45%),rgba(6,7,10,.96);overflow:hidden;box-shadow:0 30px 80px -30px rgba(80,120,255,.35)}
+.api-code-bar{display:flex;align-items:center;gap:12px;padding:12px 14px 12px 16px;border-bottom:1px solid var(--line)}
+.api-code-bar .dots{display:flex;gap:6px}
+.api-code-bar .dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18)}
+.api-code-bar .dots i:first-child{background:rgba(157,188,255,.7)}
+.api-code-bar figcaption{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg3);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.api-copy-btn{font:500 12.5px var(--sans);color:var(--fg);background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:999px;padding:6px 14px;cursor:pointer;transition:background .2s,border-color .2s}
+.api-copy-btn:hover{background:rgba(255,255,255,.12);border-color:#fff}
+.api-code pre{margin:0;padding:20px 22px 22px;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;max-width:100%}
+.api-code pre code{display:block;white-space:pre;font-size:13px;line-height:1.7;color:#dfe6ff;width:max-content;min-width:100%}
+.api-code pre:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+@media (max-width:1020px){.api-split{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:700px){
+  .api-facts div{grid-template-columns:minmax(0,1fr);gap:4px}
+  .btn-xl{height:56px;padding:0 26px;font-size:16px;width:100%;justify-content:center}
+  .api-cta{align-items:stretch}
+  .api-code pre{padding:16px 16px 18px}
+  .api-code pre code{font-size:12.5px}
+  .prod-wide .prod-actions .btn{flex:1 1 auto;justify-content:center}
+}
