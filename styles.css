@@ -52,6 +52,7 @@ a{color:inherit}
 .progress{position:absolute;left:0;bottom:-1px;height:1px;width:100%;background:linear-gradient(90deg,rgba(255,255,255,.2),#fff);transform:scaleX(0);transform-origin:left}
 .menu{position:fixed;inset:0;z-index:19;background:rgba(0,0,0,.94);display:flex;align-items:center;padding:96px var(--pad) 40px;opacity:0;transition:opacity .35s}
 .menu.open{opacity:1}
+.menu[hidden]{display:none}
 .menu nav{display:flex;flex-direction:column;gap:6px;width:100%}
 .menu a{font-family:var(--disp);font-size:clamp(28px,8vw,44px);font-weight:500;letter-spacing:.06em;text-decoration:none;padding:8px 0;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:18px}
 .menu a span{font-size:12px;color:var(--fg3);letter-spacing:.2em}
@@ -240,3 +241,89 @@ main,.footer{position:relative;z-index:2}
 }
 @media (prefers-reduced-motion:reduce) and (max-width:700px){.wordmark.load-in{letter-spacing:.3em}}
 @media (max-width:430px){.tagline{letter-spacing:.14em;font-size:9.6px;gap:0}.tagline .rule{display:none}}
+
+/* ===================== FX layer (Nov 4): 3D tilt, glow borders, text reveals, aurora ===================== */
+@property --ang{syntax:"<angle>";inherits:false;initial-value:0deg}
+.fx-paused,.fx-paused *,.fx-paused::before,.fx-paused::after,.fx-paused *::before,.fx-paused *::after{animation-play-state:paused!important}
+
+/* hero wordmark: chrome shimmer sweep */
+.wordmark{background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.98) 49%,#dce6ff 51%,transparent 58%) no-repeat,linear-gradient(180deg,#fff 22%,#a9aeb8 100%);background-size:260% 100%,100% 100%;background-position:160% 0,0 0;-webkit-background-clip:text;background-clip:text}
+.fx-on .wordmark{animation:rise-word 1.2s var(--ease) var(--d,0ms) forwards,shimmer 7s ease-in-out 2.2s infinite}
+@keyframes shimmer{0%,62%{background-position:160% 0,0 0}100%{background-position:-60% 0,0 0}}
+.tagline .scr{color:var(--accent)}
+
+/* headline words: blur + 3D flip into focus */
+.js .h2 .w{display:inline-block;opacity:0;filter:blur(8px);transform:perspective(600px) translate3d(0,.45em,0) rotateX(-55deg);transform-origin:50% 100%;transition:opacity .9s var(--ease),filter .9s var(--ease),transform 1s var(--ease);transition-delay:calc(var(--i)*55ms + 80ms)}
+.js .h2.in .w{opacity:1;filter:none;transform:none}
+.js .h2.reveal{transform:none}
+
+/* deeper scroll reveal */
+.js .reveal:not(.h2){transform:perspective(1000px) translate3d(0,36px,-30px) rotateX(9deg);transform-origin:50% 0}
+.js .reveal.in:not(.h2){transform:none}
+
+/* glowing CTAs: rotating light around the button */
+.btn{position:relative;isolation:isolate}
+.btn-solid::before{content:"";position:absolute;inset:-2px;z-index:-1;border-radius:inherit;background:conic-gradient(from var(--ang),transparent 0 55%,rgba(157,188,255,.95) 75%,#fff 82%,transparent 95%);filter:blur(7px);opacity:.75;animation:spin 4.5s linear infinite;transition:opacity .3s}
+.btn-solid::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:#fff;transition:background .25s}
+.btn-solid{background:transparent}
+.btn-solid:hover::after{background:#e3ebff}
+.btn-solid:hover::before{opacity:1;filter:blur(10px)}
+.btn-ghost::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--ang),transparent 0 70%,rgba(157,188,255,.9) 85%,#fff 90%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:spin 3.6s linear infinite;pointer-events:none}
+@keyframes spin{to{--ang:360deg}}
+
+/* 3D tilt cards + light-following glow border */
+.tilt{transform-style:preserve-3d;transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(0);transition:transform .5s var(--ease),border-color .4s}
+.tilt.hot{transition:transform .12s linear,border-color .4s;will-change:transform}
+.js .reveal.tilt:not(.in){transform:perspective(1000px) translate3d(0,36px,-30px) rotateX(9deg)}
+.glow{position:relative}
+.glow::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;background:radial-gradient(300px circle at var(--mx,50%) var(--my,0%),#fff,rgba(157,188,255,.6) 30%,transparent 65%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);opacity:0;transition:opacity .45s}
+.glow.lit::after,.glow:hover::after{opacity:1}
+.div-card.glow::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(320px circle at var(--mx,50%) var(--my,0%),rgba(157,188,255,.10),transparent 60%);opacity:0;transition:opacity .45s}
+.div-card.glow.lit::before,.div-card.glow:hover::before{opacity:1}
+.div-card{position:relative;overflow:hidden}
+.div-idx{display:inline-block;transition:transform .5s var(--ease),color .4s}
+.div-card:hover .div-idx,.div-card.lit .div-idx{transform:translate3d(0,-3px,0) scale(1.15);color:var(--accent)}
+/* product cards: a beam of light running round the border */
+.prod.beam{--ang:0deg}
+.prod .beam-edge{position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;background:conic-gradient(from var(--ang),transparent 0 78%,rgba(157,188,255,.0) 80%,rgba(157,188,255,.85) 92%,#fff 96%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:spin 6s linear infinite}
+.prod:nth-child(2) .beam-edge{animation-delay:-3s}
+
+/* founder monogram: orbiting ring */
+.mono{position:relative}
+.founder .mono::before{content:"";position:absolute;inset:-7px;border-radius:50%;padding:1.5px;background:conic-gradient(from var(--ang),transparent 0 60%,rgba(157,188,255,.9) 85%,#fff 92%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:spin 5s linear infinite}
+.people li .mono{transition:border-color .4s,box-shadow .4s,transform .4s var(--ease)}
+.people li:hover .mono{border-color:rgba(157,188,255,.8);box-shadow:0 0 22px rgba(157,188,255,.35);transform:scale(1.06)}
+
+/* aurora behind key sections */
+.aurora{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:-1;contain:strict;-webkit-mask:linear-gradient(transparent,#000 22%,#000 78%,transparent);mask:linear-gradient(transparent,#000 22%,#000 78%,transparent)}
+.aurora i{position:absolute;width:70vmax;height:70vmax;border-radius:50%;opacity:.5;background:radial-gradient(closest-side,rgba(72,110,210,.32),rgba(72,110,210,.10) 55%,transparent);animation:drift 22s ease-in-out infinite alternate}
+.aurora i:nth-child(1){left:-25vmax;top:-10%}
+.aurora i:nth-child(2){right:-28vmax;top:25%;background:radial-gradient(closest-side,rgba(180,195,230,.20),rgba(140,160,210,.07) 55%,transparent);animation-duration:28s;animation-delay:-9s}
+.aurora i:nth-child(3){left:20%;bottom:-35vmax;width:55vmax;height:55vmax;background:radial-gradient(closest-side,rgba(110,90,220,.18),transparent);animation-duration:34s;animation-delay:-4s}
+@keyframes drift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(8vmax,-5vmax,0) scale(1.15)}100%{transform:translate3d(-6vmax,6vmax,0) scale(.92)}}
+.products,.mission,.outro,.leadership{isolation:isolate}
+.outro{position:relative}
+
+/* animated light divider between sections */
+.fx-div{position:absolute;top:0;left:50%;transform:translateX(-50%);height:1px;width:min(1180px,calc(100% - 2*var(--pad,24px)));background:linear-gradient(90deg,transparent,rgba(255,255,255,.14) 20%,rgba(255,255,255,.14) 80%,transparent);overflow:hidden}
+.fx-div::after{content:"";position:absolute;top:-1px;height:3px;width:28%;left:-30%;background:linear-gradient(90deg,transparent,rgba(157,188,255,.9),#fff,rgba(157,188,255,.9),transparent);filter:blur(.6px);animation:beam 5.5s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes beam{0%{left:-30%}70%,100%{left:102%}}
+
+/* outro: light passing through the outlined line */
+.outro-line.dim{background:linear-gradient(100deg,transparent 40%,rgba(220,232,255,.95) 50%,transparent 60%) no-repeat;background-size:300% 100%;background-position:150% 0;-webkit-background-clip:text;background-clip:text;animation:shimmer2 6s ease-in-out infinite}
+@keyframes shimmer2{0%,45%{background-position:150% 0}100%{background-position:-50% 0}}
+
+/* cursor spotlight (desktop) */
+.spot{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(closest-side,rgba(157,188,255,.07),transparent);opacity:0;transition:opacity .6s;will-change:transform}
+.spot.on{opacity:1}
+
+.js .tilt.reveal.in{transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.js .tilt.settled{transition:opacity 1s var(--ease),transform .5s var(--ease),border-color .4s;transition-delay:0s}
+.js .tilt.settled.hot{transition:transform .12s linear,border-color .4s}
+@media (prefers-reduced-motion:reduce){
+  .btn-solid::before,.btn-ghost::before,.beam-edge,.founder .mono::before,.aurora i,.fx-div::after,.outro-line.dim,.fx-on .wordmark{animation:none!important}
+  .js .h2 .w{opacity:1;filter:none;transform:none;transition:none}
+  .tilt{transform:none!important}
+  .js .reveal:not(.h2){transform:none}
+  .spot{display:none}
+}
