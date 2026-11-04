@@ -186,27 +186,27 @@ export function init({ canvas, poster }) {
   /* ---------- scroll choreography ---------- */
   // per-section keyframes: camera position, look target, A position, A extra yaw, A scale, exposure
   const K = mobile ? {
-    hero:       { cam: [0, 0, 8.6], look: [0, 0, 0], a: [0, 1.4, 0], yaw: 0, s: 0.92, ex: 1.0, ai: 1 },
-    name:       { cam: [0, -0.4, 8.5], look: [0, 0.6, 0], a: [2.6, 3.8, -7], yaw: -0.6, s: 0.9, ex: 0.8, ai: 0.3 },
-    about:      { cam: [1.2, 0.4, 7.5], look: [0, 0, -1], a: [1.7, 2.6, -5], yaw: 0.9, s: 1, ex: 0.8, ai: 0.5 },
-    products:   { cam: [-0.8, 0.6, 4.2], look: [0, 0, -3], a: [-2.5, 3, -9], yaw: 1.4, s: 1, ex: 0.8, ai: 0.5 },
-    divisions:  { cam: [0.8, -0.6, 5.5], look: [0, 0, -2], a: [2, -3, -8], yaw: -0.6, s: 1, ex: 0.8, ai: 0.5 },
-    research:   { cam: [0, 2.4, 6.5], look: [0, 0, -2], a: [2.4, 4.6, -8], yaw: 0.3, s: 0.8, ex: 0.8, ai: 0.3 },
-    mission:    { cam: [0, 0, 6], look: [0, 0, -2], a: [-2.6, -3.8, -8], yaw: -0.4, s: 0.9, ex: 0.8, ai: 0.3 },
-    leadership: { cam: [-1, 0, 7], look: [0, 0, -2], a: [-1.9, 2.8, -6], yaw: 0.8, s: 0.9, ex: 0.8, ai: 0.5 },
-    media:      { cam: [0, 0, 8], look: [0, 0, 0], a: [2.6, -4.4, -7], yaw: -0.3, s: 0.9, ex: 0.85, ai: 0.35 },
-    outro:      { cam: [0, 0, 8.6], look: [0, 0, 0], a: [0, 1.55, 0], yaw: 0, s: 0.7, ex: 1.0, ai: 1 },
+    hero:       { cam: [0, 0, 8.6], look: [0, 0, 0], a: [0, 1.4, 0], yaw: 0, s: 0.92, ex: 1.0, ai: 1, ob: 1 },
+    name:       { cam: [0, -0.4, 8.5], look: [0, 0.6, 0], a: [2.6, 3.8, -7], yaw: -0.6, s: 0.9, ex: 0.8, ai: 0.3, ob: 0 },
+    about:      { cam: [1.2, 0.4, 7.5], look: [0, 0, -1], a: [1.7, 2.6, -5], yaw: 0.9, s: 1, ex: 0.8, ai: 0.5, ob: 0.9 },
+    products:   { cam: [-0.8, 0.6, 4.2], look: [0, 0, -3], a: [-2.5, 3, -9], yaw: 1.4, s: 1, ex: 0.8, ai: 0.5, ob: 0 },
+    divisions:  { cam: [0.8, -0.6, 5.5], look: [0, 0, -2], a: [2, -3, -8], yaw: -0.6, s: 1, ex: 0.8, ai: 0.5, ob: 0 },
+    research:   { cam: [0, 2.4, 6.5], look: [0, 0, -2], a: [2.4, 4.6, -8], yaw: 0.3, s: 0.8, ex: 0.8, ai: 0.3, ob: 0.75 },
+    mission:    { cam: [0, 0, 6], look: [0, 0, -2], a: [-2.6, -3.8, -8], yaw: -0.4, s: 0.9, ex: 0.8, ai: 0.3, ob: 0 },
+    leadership: { cam: [-1, 0, 7], look: [0, 0, -2], a: [-1.9, 2.8, -6], yaw: 0.8, s: 0.9, ex: 0.8, ai: 0.5, ob: 0 },
+    media:      { cam: [0, 0, 8], look: [0, 0, 0], a: [2.6, -4.4, -7], yaw: -0.3, s: 0.9, ex: 0.85, ai: 0.35, ob: 0 },
+    outro:      { cam: [0, 0, 8.6], look: [0, 0, 0], a: [0, 1.55, 0], yaw: 0, s: 0.7, ex: 1.0, ai: 1, ob: 0.55 },
   } : {
-    hero:       { cam: [0, 0, 7.2], look: [0, 0, 0], a: [0, 0.9, 0], yaw: 0, s: 1, ex: 1.0, ai: 1 },
-    name:       { cam: [0, -0.6, 8.2], look: [0, 0.4, 0], a: [7.6, 3.6, -9], yaw: -0.7, s: 1, ex: 0.75, ai: 0.6 },
-    about:      { cam: [-0.4, 0.2, 6.6], look: [0.9, 0, 0], a: [2.75, 0.15, 0], yaw: -0.5, s: 0.95, ex: 1.0, ai: 1 },
-    products:   { cam: [-1.6, 0.8, 4.2], look: [0, 0, -3], a: [6.4, 2.1, -10], yaw: -0.9, s: 0.9, ex: 0.85, ai: 0.8 },
-    divisions:  { cam: [1.4, -0.4, 5.2], look: [0, 0, -1.5], a: [-7.2, -2.4, -7], yaw: 0.9, s: 1, ex: 0.8, ai: 0.8 },
-    research:   { cam: [0.2, 2.2, 6.6], look: [0, 0, -3], a: [0.1, 0.4, -15], yaw: 0.6, s: 0.9, ex: 0.85, ai: 0.9 },
-    mission:    { cam: [0, 0, 6.6], look: [0, 0, -1], a: [5.6, -2.6, -8], yaw: -0.6, s: 0.9, ex: 0.8, ai: 0.9 },
-    leadership: { cam: [-1.2, 0.3, 7.4], look: [0, 0, -1], a: [6.2, 0.8, -4], yaw: -0.7, s: 0.95, ex: 0.85, ai: 0.8 },
-    media:      { cam: [0.6, 0, 7.6], look: [0, 0, 0], a: [4.3, -0.9, -2], yaw: -0.5, s: 0.9, ex: 0.9, ai: 0.9 },
-    outro:      { cam: [0, 0, 7.4], look: [0, 0.5, 0], a: [0, 1.3, 0], yaw: 0, s: 0.75, ex: 1.0, ai: 1 },
+    hero:       { cam: [0, 0, 7.2], look: [0, 0, 0], a: [0, 0.9, 0], yaw: 0, s: 1, ex: 1.0, ai: 1, ob: 1 },
+    name:       { cam: [0, -0.6, 8.2], look: [0, 0.4, 0], a: [7.6, 3.6, -9], yaw: -0.7, s: 1, ex: 0.75, ai: 0.6, ob: 0 },
+    about:      { cam: [-0.4, 0.2, 6.6], look: [0.9, 0, 0], a: [2.75, 0.15, 0], yaw: -0.5, s: 0.95, ex: 1.0, ai: 1, ob: 0.9 },
+    products:   { cam: [-1.6, 0.8, 4.2], look: [0, 0, -3], a: [6.4, 2.1, -10], yaw: -0.9, s: 0.9, ex: 0.85, ai: 0.8, ob: 0 },
+    divisions:  { cam: [1.4, -0.4, 5.2], look: [0, 0, -1.5], a: [-7.2, -2.4, -7], yaw: 0.9, s: 1, ex: 0.8, ai: 0.8, ob: 0 },
+    research:   { cam: [0.2, 2.2, 6.6], look: [0, 0, -3], a: [0.1, 0.4, -15], yaw: 0.6, s: 0.9, ex: 0.85, ai: 0.9, ob: 0.75 },
+    mission:    { cam: [0, 0, 6.6], look: [0, 0, -1], a: [5.6, -2.6, -8], yaw: -0.6, s: 0.9, ex: 0.8, ai: 0.9, ob: 0 },
+    leadership: { cam: [-1.2, 0.3, 7.4], look: [0, 0, -1], a: [6.2, 0.8, -4], yaw: -0.7, s: 0.95, ex: 0.85, ai: 0.8, ob: 0 },
+    media:      { cam: [0.6, 0, 7.6], look: [0, 0, 0], a: [4.3, -0.9, -2], yaw: -0.5, s: 0.9, ex: 0.9, ai: 0.9, ob: 0 },
+    outro:      { cam: [0, 0, 7.4], look: [0, 0.5, 0], a: [0, 1.3, 0], yaw: 0, s: 0.75, ex: 1.0, ai: 1, ob: 0.55 },
   };
   function heroFromDom() {
     const h = window.__heroA; if (!h || !H) return;
@@ -256,6 +256,103 @@ export function init({ canvas, poster }) {
       px = Math.max(-1, Math.min(1, e.gamma / 30)); py = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
     }, { passive: true });
   }
+
+
+  /* ---------- neural orb: a living network of nodes around the A (signals travel the links) ---------- */
+  const orbU = { uTime: uniforms.uTime, uPx: uniforms.uPx, uOp: { value: 1 }, uPtr: { value: new THREE.Vector2(9, 9) }, uPtrOn: { value: 0 }, uAsp: { value: 1 }, uAccent: { value: accent } };
+  const pushGL = `
+    uniform vec2 uPtr; uniform float uPtrOn; uniform float uAsp;
+    vec4 pushAway(vec4 cp){
+      vec2 d = cp.xy / cp.w - uPtr; d.x *= uAsp;
+      float l = length(d); float f = uPtrOn * 0.11 * exp(-l * l * 18.0);
+      vec2 dir = l > 0.0001 ? d / l : vec2(0.0); dir.x /= uAsp;
+      cp.xy += dir * f * cp.w; return cp;
+    }`;
+  const orb = new THREE.Group();
+  scene.add(orb);
+  const ORB_N = [360, 560, 900][tier], ORB_R = 1.5;
+  const op = new Float32Array(ORB_N * 3), osz = new Float32Array(ORB_N), oph = new Float32Array(ORB_N);
+  const GA = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < ORB_N; i++) {
+    const y = 1 - (i + 0.5) / ORB_N * 2, r = Math.sqrt(1 - y * y), th = GA * i;
+    const rr = ORB_R * (1 + (Math.random() - 0.5) * 0.06);
+    op[i * 3] = Math.cos(th) * r * rr; op[i * 3 + 1] = y * rr; op[i * 3 + 2] = Math.sin(th) * r * rr;
+    osz[i] = Math.random() < 0.08 ? rand(1.6, 2.4) : rand(0.6, 1.1); oph[i] = Math.random();
+  }
+  // links: each node to its two nearest neighbours
+  const orbSegs = [];
+  for (let i = 0; i < ORB_N; i++) {
+    let b1 = -1, b2 = -1, d1 = 1e9, d2 = 1e9;
+    for (let j = 0; j < ORB_N; j++) {
+      if (j === i) continue;
+      const dx = op[i*3]-op[j*3], dy = op[i*3+1]-op[j*3+1], dz = op[i*3+2]-op[j*3+2], d = dx*dx+dy*dy+dz*dz;
+      if (d < d1) { d2 = d1; b2 = b1; d1 = d; b1 = j; } else if (d < d2) { d2 = d; b2 = j; }
+    }
+    if (b1 > i) orbSegs.push(i, b1); if (b2 > i) orbSegs.push(i, b2);
+  }
+  const SN = orbSegs.length / 2;
+  const lp = new Float32Array(SN * 6), lt = new Float32Array(SN * 2), lph = new Float32Array(SN * 2);
+  for (let s2 = 0; s2 < SN; s2++) {
+    const a = orbSegs[s2 * 2], b = orbSegs[s2 * 2 + 1], ph = Math.random();
+    lp.set([op[a*3], op[a*3+1], op[a*3+2], op[b*3], op[b*3+1], op[b*3+2]], s2 * 6);
+    lt[s2 * 2] = 0; lt[s2 * 2 + 1] = 1; lph[s2 * 2] = ph; lph[s2 * 2 + 1] = ph;
+  }
+  const facing = `float facing(vec3 p){ vec3 d = normalize(mat3(modelViewMatrix) * p); return 0.22 + 0.78 * smoothstep(-0.9, 0.7, d.z); }`;
+  const orbPts = (() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(op, 3));
+    g.setAttribute('aSize', new THREE.BufferAttribute(osz, 1));
+    g.setAttribute('aPhase', new THREE.BufferAttribute(oph, 1));
+    const m = new THREE.ShaderMaterial({ uniforms: orbU, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      vertexShader: `attribute float aSize; attribute float aPhase; uniform float uTime; uniform float uPx; varying float vA; varying float vT; ${pushGL} ${facing}
+        void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          float tw = 0.6 + 0.4 * sin(uTime * (0.8 + aPhase * 1.6) + aPhase * 30.0);
+          vA = facing(position) * tw; vT = step(0.86, aPhase);
+          gl_PointSize = clamp(aSize * uPx * 26.0 / max(-mv.z, 0.5), 1.0, 6.0 * uPx);
+          gl_Position = pushAway(projectionMatrix * mv); }`,
+      fragmentShader: `uniform float uOp; uniform vec3 uAccent; varying float vA; varying float vT;
+        void main(){ float r = length(gl_PointCoord - 0.5); float a = smoothstep(0.5, 0.05, r);
+          gl_FragColor = vec4(mix(vec3(1.0), uAccent, vT), a * a * vA * uOp); }` });
+    return new THREE.Points(g, m);
+  })();
+  const orbLines = (() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(lp, 3));
+    g.setAttribute('aT', new THREE.BufferAttribute(lt, 1));
+    g.setAttribute('aPh', new THREE.BufferAttribute(lph, 1));
+    const m = new THREE.ShaderMaterial({ uniforms: orbU, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      vertexShader: `attribute float aT; attribute float aPh; varying float vT; varying float vPh; varying float vF; ${pushGL} ${facing}
+        void main(){ vT = aT; vPh = aPh; vF = facing(position); gl_Position = pushAway(projectionMatrix * modelViewMatrix * vec4(position, 1.0)); }`,
+      fragmentShader: `uniform float uTime; uniform float uOp; uniform vec3 uAccent; varying float vT; varying float vPh; varying float vF;
+        void main(){ float p = fract(uTime * 0.22 + vPh) * 4.0 - 1.0; float pulse = exp(-pow(p - vT, 2.0) * 60.0);
+          vec3 col = mix(vec3(0.85, 0.9, 1.0), uAccent, pulse);
+          gl_FragColor = vec4(col, (0.13 + pulse * 0.85) * vF * uOp); }` });
+    return new THREE.LineSegments(g, m);
+  })();
+  orb.add(orbLines, orbPts);
+  // two comet orbits circling the sphere
+  const rings = [];
+  for (let k = 0; k < 2; k++) {
+    const RN = [140, 200, 260][tier], rp = new Float32Array(RN * 3), ra = new Float32Array(RN);
+    for (let i = 0; i < RN; i++) { const a = i / RN * Math.PI * 2; rp.set([Math.cos(a) * ORB_R * 1.32, 0, Math.sin(a) * ORB_R * 1.32], i * 3); ra[i] = i / RN; }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(rp, 3));
+    g.setAttribute('aA', new THREE.BufferAttribute(ra, 1));
+    const m = new THREE.ShaderMaterial({ uniforms: Object.assign({ uDir: { value: k ? -1 : 1 }, uSp: { value: k ? 0.07 : 0.11 } }, orbU), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      vertexShader: `attribute float aA; uniform float uTime; uniform float uPx; uniform float uDir; uniform float uSp; varying float vA; ${pushGL}
+        void main(){ float h = fract(aA * uDir - uTime * uSp); vA = 0.06 + pow(h, 7.0) * 0.95;
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = clamp((0.7 + pow(h, 10.0) * 1.8) * uPx * 26.0 / max(-mv.z, 0.5), 1.0, 6.0 * uPx);
+          gl_Position = pushAway(projectionMatrix * mv); }`,
+      fragmentShader: `uniform float uOp; uniform vec3 uAccent; varying float vA;
+        void main(){ float r = length(gl_PointCoord - 0.5); float a = smoothstep(0.5, 0.0, r);
+          gl_FragColor = vec4(mix(uAccent, vec3(1.0), vA), a * vA * uOp); }` });
+    const ring = new THREE.Points(g, m);
+    ring.rotation.set(k ? -1.05 : 1.22, 0, k ? 0.5 : -0.35);
+    orb.add(ring); rings.push(ring);
+  }
+  let ptrOn = 0, ptrT = -10;
+  if (!matchMedia('(pointer: coarse)').matches) addEventListener('pointermove', () => { ptrT = performance.now(); }, { passive: true });
 
   /* ---------- sizing ---------- */
   let W = 0, H = 0;
@@ -328,6 +425,23 @@ export function init({ canvas, poster }) {
     field.rotation.x = -spy * 0.03;
     uniforms.uTime.value = t;
     renderer.toneMappingExposure = cur.ex;
+    // neural orb follows the A
+    const ob = cur.ob === undefined ? 0 : cur.ob;
+    orb.visible = ob > 0.01;
+    if (orb.visible) {
+      orb.position.copy(aGroup.position);
+      orb.scale.setScalar(cur.s * (0.96 + ob * 0.04));
+      orb.rotation.y = t * 0.075 + spx * 0.25;
+      orb.rotation.x = 0.18 + spy * 0.12;
+      rings[0].rotation.y = t * 0.05; rings[1].rotation.y = -t * 0.035;
+      orbU.uOp.value = ob;
+      orbU.uAsp.value = W / Math.max(1, H);
+      const want = (performance.now() - ptrT) < 2500 ? 1 : 0;
+      ptrOn += (want - ptrOn) * (1 - Math.exp(-dt * 3));
+      orbU.uPtrOn.value = ptrOn;
+      orbU.uPtr.value.set(px, -py);
+    }
+
     aiU.value = cur.ai; aMat.envMapIntensity = 1.15 * cur.ai; aMat.color.copy(baseColor).multiplyScalar(0.3 + 0.7 * cur.ai); halo.material.opacity = 0.32 * cur.ai;
 
     renderer.render(scene, camera);
